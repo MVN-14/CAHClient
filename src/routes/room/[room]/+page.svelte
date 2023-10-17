@@ -4,7 +4,7 @@
   import PlayerList from "./PlayerList.svelte";
   import Board from "./Board.svelte";
   import Hand from "./Hand.svelte";
-
+  import { PUBLIC_SOCKET_URL } from '$env/static/public'
   export let data;
   $: roomName = data.roomName;
 
@@ -18,7 +18,7 @@
 
   function onUsernameEntered(event: CustomEvent) {
     username = event.detail.username;
-    socket = io("http://localhost:6969");
+    socket = io(PUBLIC_SOCKET_URL);
     socket.on("connect", () => {
       console.log("socket connected");
 
