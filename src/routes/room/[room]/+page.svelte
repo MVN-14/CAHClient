@@ -3,18 +3,21 @@
   import UsernameForm from "./UsernameForm.svelte";
   import PlayerList from "./PlayerList.svelte";
   import Board from "./Board.svelte";
-  import Hand from "./Hand.svelte";
-  import { PUBLIC_SOCKET_URL } from '$env/static/public'
+  import type { Player } from "./Player.ts";
+  import { PUBLIC_SOCKET_URL } from "$env/static/public";
+  import { userStore, gameStore } from "../../../stores";
+
   export let data;
   $: roomName = data.roomName;
 
-  const maxCards = 5;
+  const maxCards = 7;
+  const { cards, cardPlayed } = userStore;
+  const { players } = gameStore;
 
   let username: string;
   let socket: Socket;
-  let players: string[] = [];
-  let cards: string[] = [];
   let serverMessage: string = "";
+  let prompt: string;
 
   function onUsernameEntered(event: CustomEvent) {
     username = event.detail.username;
@@ -25,24 +28,44 @@
       socket.emit("joinRoom", { username, roomName });
     });
 
-    socket.on("updatePlayers", (newPlayers: string[]) => {
-      players = newPlayers;
+    cardPlayed.subscribe((card) => {
+      if(!card) {
+        return;
+      }
+      socket.emit("cardPlayed", card);
     });
-    
+
+    socket.on("updatePlayers", (newPlayers: Player[]) => {
+      players.set(
+        newPlayers.map((player) => ({
+          name: player.name,
+          ready: player.ready,
+        }))
+      );
+    });
+
     socket.on("recieveWhiteCards", (newCards: string[]) => {
-      cards = [...cards, ...newCards];
-    })
+      cards.set([...$cards, ...newCards]);
+    });
+
+    socket.on("serverMessage", (message: string) => {
+      serverMessage = message;
+    });
+
+    socket.on("prompt", ({ text }: { text: string }) => {
+      prompt = text;
+    });
   }
 
   function drawCards() {
-    if (cards.length == maxCards) return;
-    socket.emit("requestWhiteCards", maxCards - cards.length);
+    console.log(cards);
+    if ($cards.length == maxCards) return;
+    socket.emit("requestWhiteCards", maxCards - $cards.length);
   }
 
-  function startGame() {
-    
+  function ready() {
+    socket.emit("ready");
   }
-
 </script>
 
 <main>
@@ -50,27 +73,19 @@
   {#if !username || username.trim().length == 0}
     <UsernameForm on:usernameEntered={onUsernameEntered} />
   {:else}
-  <button on:click={startGame}>Ready</button>
-  <p>{serverMessage}</p>
+    <button on:click={ready}>Ready</button>
+    <p>{serverMessage}</p>
     <div id="content">
-      <PlayerList bind:players username={username}/>
-      <Board />
+      <PlayerList {username} />
+      <Board {prompt} />
     </div>
     <button on:click={drawCards}>Draw</button>
-    <div id="hand">
-      <Hand bind:cards />
-    </div>
   {/if}
 </main>
 
 <style>
   main {
     text-align: center;
-  }
-
-  #hand {
-    text-align: center;
-    padding: 20px 0 0 0;
   }
 
   #content {

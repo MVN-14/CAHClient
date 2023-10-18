@@ -1,12 +1,15 @@
 <script lang="ts">
-  export let players: string[];
+  import { gameStore } from "../../../stores";
+
   export let username: string;
+
+  const { players } = gameStore;
 </script>
 
 <main>
   <h1>Players:</h1>
-  {#each players as player}
-    <p>{player}{player === username ? "(You)" : ""}</p>
+  {#each $players as player}
+    <p>{player.name}{player.name === username ? " (You)" : ""}</p>
   {/each}
 </main>
 
@@ -14,9 +17,9 @@
   main {
     border: solid;
     width: 15vw;
-    height: 60vh;
+    height: 70vh;
     text-align: left;
-    padding: 10px;
+    padding: 0 10px 0 10px;
   }
 
   h1 {

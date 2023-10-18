@@ -1,35 +1,29 @@
 <script lang="ts">
-  export let cards: string[];
+  import Card from "./Card.svelte";
+  import { userStore } from "../../../stores";
+
+  const { cards, cardPlayed } = userStore;
+  
+  function onClick(card: string) {
+    if($cardPlayed) {
+      return;
+    }
+
+    cardPlayed.set(card);
+    cards.set($cards.filter(c => c !== card));
+  }
 </script>
 
-<main>
-  {#each cards as card}
-    <div class="card">
-      {card}
-    </div>
+<div>
+  {#each $cards as card}
+    <Card text={card} color="white" on:click={() => onClick(card)} />
   {/each}
-</main>
+</div>
 
 <style>
-  main {
-    justify-content: center;
+  div {
+    justify-content: space-around;
     display: flex;
     gap: 15px;
-  }
-
-  .card {
-    background-color: white;
-    color: black;
-    z-index: 5;
-    height: 200px;
-    width: 150px;
-    border: solid white;
-    border-radius: 7px;
-    padding: 10px;
-  }
-
-  .card:hover {
-    cursor: pointer;
-    translate: 0 -100px;
   }
 </style>
