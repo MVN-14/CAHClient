@@ -1,11 +1,12 @@
 <script lang="ts">
   import Card from "./Card.svelte";
-  import { userStore } from "../../../stores";
+  import { userStore, gameStore } from "../../../stores";
 
   const { cards, cardPlayed } = userStore;
-  
+  const { started } = gameStore; 
+
   function onClick(card: string) {
-    if($cardPlayed) {
+    if($cardPlayed || !$started) {
       return;
     }
 
