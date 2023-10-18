@@ -6,7 +6,7 @@
 
   function onSubmit() {
     dispatch('usernameEntered', {
-      username: value
+      value
     })
   }
 </script>

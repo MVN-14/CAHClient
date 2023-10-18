@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { gameStore } from "../../stores";
-
-  export let username: string;
+  import { gameStore, userStore } from "../../stores";
 
   const { players } = gameStore;
+  const { username } = userStore;
 </script>
 
 <main>
   <h1>Players:</h1>
   {#each $players as player}
-    <p>{player.name}{player.name === username ? " (You)" : ""}</p>
+    <p>{player.name} {player.name === $username ? " (You)" : ""}</p>
   {/each}
 </main>
 

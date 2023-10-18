@@ -1,65 +1,27 @@
 <script lang="ts">
-  import { Socket, io } from "socket.io-client";
+  import type { Socket } from "socket.io-client";
   import { Board, PlayerList, UsernameForm } from "$lib/components";
-  import type { Player } from "$lib/types";
-  import { PUBLIC_SOCKET_URL } from "$env/static/public";
   import { userStore, gameStore } from "../../../stores";
+  import { initializeSocket } from "$lib/socket";
 
   export let data;
   $: roomName = data.roomName;
 
   const maxCards = 7;
-  const { cards, cardPlayed } = userStore;
-  const { players, started, status } = gameStore;
+  const { cards, username } = userStore;
+  const { status } = gameStore;
 
-  let username: string;
   let socket: Socket;
   let prompt: string;
 
   function onUsernameEntered(event: CustomEvent) {
-    username = event.detail.username;
-    socket = io(PUBLIC_SOCKET_URL);
-    socket.on("connect", () => {
-      console.log("socket connected");
-
-      socket.emit("joinRoom", { username, roomName });
-    });
-
-    cardPlayed.subscribe((card) => {
-      if (!card) {
-        return;
-      }
-      socket.emit("cardPlayed", card);
-    });
-
-    socket.on("updatePlayers", (newPlayers: Player[]) => {
-      players.set(
-        newPlayers.map((player) => ({
-          name: player.name,
-          ready: player.ready,
-        }))
-      );
-    });
-
-    socket.on("recieveWhiteCards", (newCards: string[]) => {
-      cards.set([...$cards, ...newCards]);
-    });
-
-    socket.on("start", () => {
-      started.set(true);
-    });
-
-    socket.on("serverMessage", (message: string) => {
-      $status = message;
-    });
-
-    socket.on("prompt", ({ text }: { text: string }) => {
-      prompt = text;
-    });
+    console.log(event.detail.value)
+    username.set(event.detail.value);
+    socket = initializeSocket(socket);
   }
 
   function drawCards() {
-    console.log(cards);
+    console.log($cards);
     if ($cards.length == maxCards) return;
     socket.emit("requestWhiteCards", maxCards - $cards.length);
   }
@@ -71,13 +33,13 @@
 
 <main>
   <h1>Room - {roomName}</h1>
-  {#if !username || username.trim().length == 0}
+  {#if $username.length == 0}
     <UsernameForm on:usernameEntered={onUsernameEntered} />
   {:else}
     <button on:click={ready}>Ready</button>
     <p>{$status}</p>
     <div id="content">
-      <PlayerList {username} />
+      <PlayerList />
       <Board {prompt} />
     </div>
     <button on:click={drawCards}>Draw</button>
