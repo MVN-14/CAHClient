@@ -14,13 +14,11 @@
   let socket: Socket;
 
   function onUsernameEntered(event: CustomEvent) {
-    console.log(event.detail.value);
     username.set(event.detail.value);
     socket = initializeSocket(socket);
   }
 
   function drawCards() {
-    console.log($cards);
     if ($cards.length == maxCards) return;
     socket.emit("requestWhiteCards", maxCards - $cards.length);
   }

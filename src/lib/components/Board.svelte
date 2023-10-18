@@ -6,11 +6,6 @@
   const { cardPlayed } = userStore;
   const { prompt } = gameStore;
 
-  function onClick(event: CustomEvent) {
-    console.log("Board event", event);
-    console.log("Board on click", event.detail);
-    cardPlayed.set(event.detail);
-  }
 </script>
 
 <main>
@@ -23,7 +18,7 @@
     {/if}
   </div>
   <div class="handContainer">
-    <Hand on:click={onClick} />
+    <Hand />
   </div>
 </main>
 
