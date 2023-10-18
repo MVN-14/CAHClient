@@ -9,13 +9,12 @@
 
   const maxCards = 7;
   const { cards, username } = userStore;
-  const { status } = gameStore;
+  const { status, started } = gameStore;
 
   let socket: Socket;
-  let prompt: string;
 
   function onUsernameEntered(event: CustomEvent) {
-    console.log(event.detail.value)
+    console.log(event.detail.value);
     username.set(event.detail.value);
     socket = initializeSocket(socket);
   }
@@ -26,7 +25,7 @@
     socket.emit("requestWhiteCards", maxCards - $cards.length);
   }
 
-  function ready() {
+  function onReady() {
     socket.emit("ready");
   }
 </script>
@@ -36,13 +35,15 @@
   {#if $username.length == 0}
     <UsernameForm on:usernameEntered={onUsernameEntered} />
   {:else}
-    <button on:click={ready}>Ready</button>
+    <button on:click={onReady}>Ready</button>
     <p>{$status}</p>
     <div id="content">
       <PlayerList />
-      <Board {prompt} />
+      <Board />
     </div>
-    <button on:click={drawCards}>Draw</button>
+    {#if $started}
+      <button on:click={drawCards}>Draw</button>
+    {/if}
   {/if}
 </main>
 

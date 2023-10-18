@@ -2,11 +2,11 @@
   import Card from "./Card.svelte";
   import { userStore, gameStore } from "../../stores";
 
-  const { cards, cardPlayed } = userStore;
-  const { started } = gameStore; 
+  const { cards, cardPlayed, username } = userStore;
+  const { started, czar } = gameStore; 
 
   function onClick(card: string) {
-    if($cardPlayed || !$started) {
+    if($cardPlayed || !$started || $czar === $username) {
       return;
     }
 

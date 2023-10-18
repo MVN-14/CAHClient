@@ -4,7 +4,7 @@ import { userStore, gameStore } from "../stores"
 import type { Player } from "$lib/types";
 
 const { getUsername, getRoomName, cardPlayed, cards } = userStore;
-const { players, status, started, prompt } = gameStore;
+const { players, status, started, prompt, czar } = gameStore;
 
 export function initializeSocket(socket: Socket) {
   socket = io(PUBLIC_SOCKET_URL);
@@ -22,12 +22,7 @@ export function initializeSocket(socket: Socket) {
   });
 
   socket.on("updatePlayers", (newPlayers: Player[]) => {
-    players.set(
-      newPlayers.map((player) => ({
-        name: player.name,
-        ready: player.ready,
-      }))
-    );
+    players.set(newPlayers);
   });
 
   socket.on("recieveWhiteCards", (newCards: string[]) => {
@@ -45,6 +40,11 @@ export function initializeSocket(socket: Socket) {
   socket.on("prompt", ({ text }: { text: string }) => {
     prompt.set(text);
   });
+
+  socket.on("czar", (newCzar: string) => {
+    console.log("czar", newCzar);
+    czar.set(newCzar);
+  })
 
   return socket;
 }

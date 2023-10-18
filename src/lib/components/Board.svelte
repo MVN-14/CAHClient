@@ -1,11 +1,10 @@
 <script lang="ts">
   import Card from "./Card.svelte";
   import Hand from "./Hand.svelte";
-  import { userStore } from "../../stores";
-
-  export let prompt: string;
+  import { userStore, gameStore } from "../../stores";
 
   const { cardPlayed } = userStore;
+  const { prompt } = gameStore;
 
   function onClick(event: CustomEvent) {
     console.log("Board event", event);
@@ -16,8 +15,8 @@
 
 <main>
   <div class="prompt">
-    {#if prompt}
-      <Card text={prompt} color="black" />
+    {#if $prompt}
+      <Card text={$prompt} color="black" />
     {/if}
     {#if $cardPlayed}
       <Card color="white" text={$cardPlayed} />

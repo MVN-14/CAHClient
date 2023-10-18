@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { gameStore, userStore } from "../../stores";
+  import { gameStore } from "../../stores";
 
-  const { players } = gameStore;
-  const { username } = userStore;
+  const { players, czar } = gameStore;
+
 </script>
 
 <main>
   <h1>Players:</h1>
   {#each $players as player}
-    <p>{player.name} {player.name === $username ? " (You)" : ""}</p>
+    <p class:czar={$czar === player.name} class:played={player.playedCard}>{player.name}</p>
   {/each}
 </main>
 
@@ -28,5 +28,15 @@
 
   p {
     font-size: 18px;
+  }
+  
+  .played {
+    border-left: solid white 15px;  
+  }
+
+  .czar {
+    border-left: solid black 15px;
+    /*background-color: black;
+    font-weight: bolder;*/
   }
 </style>

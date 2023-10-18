@@ -5,7 +5,6 @@ class UserStore {
   constructor(
     public cards: Writable<string[]> = writable([]),
     public cardPlayed: Writable<string> = writable(""),
-    public isCzar: Writable<boolean> = writable(false),
     public username: Writable<string> = writable(""),
     public roomName: Writable<string> = writable(""),
   ) { }
@@ -22,6 +21,7 @@ class UserStore {
   getRoomName = () => {
     return get(this.roomName);
   }
+  
 };
 
 class GameStore {
@@ -30,11 +30,16 @@ class GameStore {
     public players: Writable<Player[]> = writable([]),
     public status: Writable<string> = writable(""),
     public prompt: Writable<string> = writable(""),
+    public czar: Writable<string> = writable(""),
   ) { }
   
   // methods for non svelte files
   getStatus = () =>  {
     return get(this.status);
+  }
+
+  getCzar = () => {
+    return get(this.czar);
   }
 };
 
