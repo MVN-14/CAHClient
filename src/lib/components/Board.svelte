@@ -1,7 +1,7 @@
 <script lang="ts">
   import Card from "./Card.svelte";
   import Hand from "./Hand.svelte";
-  import { userStore } from "../../../stores";
+  import { userStore } from "../../stores";
 
   export let prompt: string;
 

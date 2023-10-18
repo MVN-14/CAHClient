@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { userStore } from "../../../stores";
+  import { userStore } from "../../stores";
 
   const dispatch = createEventDispatcher();
   const { cardPlayed } = userStore;

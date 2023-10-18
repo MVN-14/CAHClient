@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameStore } from "../../../stores";
+  import { gameStore } from "../../stores";
 
   export let username: string;
 

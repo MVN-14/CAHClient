@@ -1,5 +1,5 @@
 import { writable, type Writable } from 'svelte/store';
-import type { Player } from './routes/room/[room]/Player';
+import type { Player } from '$lib/types/Player';
 
 class UserStore {
   constructor(
@@ -13,7 +13,8 @@ class UserStore {
 class GameStore {
   constructor(
     public started: Writable<boolean> = writable(false),
-    public players: Writable<Player[]> = writable([])
+    public players: Writable<Player[]> = writable([]),
+    public status: Writable<string> = writable(""),
   ) { }
 };
 

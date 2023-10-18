@@ -1,6 +1,6 @@
 <script lang="ts">
   import Card from "./Card.svelte";
-  import { userStore, gameStore } from "../../../stores";
+  import { userStore, gameStore } from "../../stores";
 
   const { cards, cardPlayed } = userStore;
   const { started } = gameStore; 

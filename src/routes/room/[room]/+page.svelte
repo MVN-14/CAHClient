@@ -1,9 +1,7 @@
 <script lang="ts">
   import { Socket, io } from "socket.io-client";
-  import UsernameForm from "./UsernameForm.svelte";
-  import PlayerList from "./PlayerList.svelte";
-  import Board from "./Board.svelte";
-  import type { Player } from "./Player.ts";
+  import { Board, PlayerList, UsernameForm } from "$lib/components";
+  import type { Player } from "$lib/types";
   import { PUBLIC_SOCKET_URL } from "$env/static/public";
   import { userStore, gameStore } from "../../../stores";
 
@@ -12,11 +10,10 @@
 
   const maxCards = 7;
   const { cards, cardPlayed } = userStore;
-  const { players } = gameStore;
+  const { players, started, status } = gameStore;
 
   let username: string;
   let socket: Socket;
-  let serverMessage: string = "";
   let prompt: string;
 
   function onUsernameEntered(event: CustomEvent) {
@@ -29,7 +26,7 @@
     });
 
     cardPlayed.subscribe((card) => {
-      if(!card) {
+      if (!card) {
         return;
       }
       socket.emit("cardPlayed", card);
@@ -48,8 +45,12 @@
       cards.set([...$cards, ...newCards]);
     });
 
+    socket.on("start", () => {
+      started.set(true);
+    });
+
     socket.on("serverMessage", (message: string) => {
-      serverMessage = message;
+      $status = message;
     });
 
     socket.on("prompt", ({ text }: { text: string }) => {
@@ -74,7 +75,7 @@
     <UsernameForm on:usernameEntered={onUsernameEntered} />
   {:else}
     <button on:click={ready}>Ready</button>
-    <p>{serverMessage}</p>
+    <p>{$status}</p>
     <div id="content">
       <PlayerList {username} />
       <Board {prompt} />
