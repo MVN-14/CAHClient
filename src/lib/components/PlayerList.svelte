@@ -6,7 +6,11 @@
 <main>
   <h1>Players:</h1>
   {#each $gameStore.players as player}
-    <p class:czar={player.isCzar} class:played={player.playedCard}>{player.name}</p>
+    <p class:czar={player.isCzar} 
+       class:played={player.playedCards === $gameStore.prompt?.pick}
+    >
+      {player.name}
+    </p>
   {/each}
 </main>
 
