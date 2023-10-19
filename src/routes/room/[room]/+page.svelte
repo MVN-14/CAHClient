@@ -1,46 +1,51 @@
 <script lang="ts">
-  import type { Socket } from "socket.io-client";
   import { Board, PlayerList, UsernameForm } from "$lib/components";
-  import { userStore, gameStore } from "../../../stores";
+  import { gameStore, getPlayer, socketStore } from "../../../stores";
   import { initializeSocket } from "$lib/socket";
 
   export let data;
-  $: roomName = data.roomName;
 
   const maxCards = 7;
-  const { cards, username } = userStore;
-  const { status, started } = gameStore;
 
-  let socket: Socket;
+  let roomName: string;
+
+  $: roomName = data.roomName;
 
   function onUsernameEntered(event: CustomEvent) {
-    username.set(event.detail.value);
-    socket = initializeSocket(socket);
+    const username = event.detail.value;
+    initializeSocket(username, roomName);
   }
 
-  function drawCards() {
-    if ($cards.length == maxCards) return;
-    socket.emit("requestWhiteCards", maxCards - $cards.length);
+  function onDraw() {
+    const player = $gameStore.players.find(p => p.socketId === $socketStore.id);
+    if (!player) { return }
+
+    const numCards = player.cards.length;
+    if (numCards < maxCards) {
+      $socketStore.emit("drawCards", maxCards - numCards);
+    }
   }
 
   function onReady() {
-    socket.emit("ready");
+    $socketStore.emit("ready");
   }
 </script>
 
 <main>
   <h1>Room - {roomName}</h1>
-  {#if $username.length == 0}
+  {#if !$socketStore}
     <UsernameForm on:usernameEntered={onUsernameEntered} />
   {:else}
-    <button on:click={onReady}>Ready</button>
-    <p>{$status}</p>
+    {#if !$gameStore.started}
+      <button on:click={onReady}>Ready</button>
+    {/if}
+    <p>{$gameStore.status}</p>
     <div id="content">
       <PlayerList />
       <Board />
     </div>
-    {#if $started}
-      <button on:click={drawCards}>Draw</button>
+    {#if $gameStore.started}
+      <button on:click={onDraw}>Draw</button>
     {/if}
   {/if}
 </main>

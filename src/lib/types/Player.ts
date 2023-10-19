@@ -1,6 +1,8 @@
 export type Player = {
-  name: string;
   ready: boolean;
   playedCard: boolean;
-  isCzar: boolean;
+  isCzar: boolean; 
+  name: string;
+  socketId: string;
+  cards: string[];
 }

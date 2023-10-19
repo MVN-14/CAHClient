@@ -1,13 +1,11 @@
 <script lang="ts">
   import { gameStore } from "../../stores";
 
-  const { players } = gameStore;
-
 </script>
 
 <main>
   <h1>Players:</h1>
-  {#each $players as player}
+  {#each $gameStore.players as player}
     <p class:czar={player.isCzar} class:played={player.playedCard}>{player.name}</p>
   {/each}
 </main>
@@ -27,16 +25,16 @@
   }
 
   p {
-    font-size: 18px;
+    border-left: solid transparent 15px;
+    font-size: 24px;
+    padding: 0 0 0 10px;
   }
   
   .played {
-    border-left: solid white 15px;  
+    border-color: white;
   }
 
   .czar {
-    border-left: solid black 15px;
-    /*background-color: black;
-    font-weight: bolder;*/
+    border-color: black;
   }
 </style>

@@ -1,50 +1,22 @@
 import { Socket, io } from "socket.io-client";
 import { PUBLIC_SOCKET_URL } from "$env/static/public";
-import { userStore, gameStore } from "../stores"
-import type { Player } from "$lib/types";
+import type { Game } from "$lib/types";
+import { gameStore, socketStore } from "../stores";
 
-const { getUsername, getRoomName, cardPlayed, cards } = userStore;
-const { players, status, started, prompt, czar } = gameStore;
+//const { getUsername, getRoomName, cardPlayed, cards } = userStore;
+//const { players, status, started, prompt, czar } = gameStore;
 
-export function initializeSocket(socket: Socket) {
-  socket = io(PUBLIC_SOCKET_URL);
+export function initializeSocket(username: string, roomName: string) {
+  const socket = io(PUBLIC_SOCKET_URL);
   socket.on("connect", () => {
     console.log("socket connected");
 
-    socket.emit("joinRoom", { username: getUsername(), roomName: getRoomName() });
+    socket.emit("joinRoom", { username, roomName });
   });
 
-  cardPlayed.subscribe((card) => {
-    if (!card) {
-      return;
-    }
-    socket.emit("cardPlayed", card);
+  socket.on("updateGame", (game: Game) => {
+    gameStore.set(game);    
   });
-
-  socket.on("updatePlayers", (newPlayers: Player[]) => {
-    players.set(newPlayers);
-  });
-
-  socket.on("recieveWhiteCards", (newCards: string[]) => {
-    cards.set([...userStore.getCards(), ...newCards]);
-  });
-
-  socket.on("start", () => {
-    started.set(true);
-  });
-
-  socket.on("serverMessage", (message: string) => {
-    status.set(message);
-  });
-
-  socket.on("prompt", ({ text }: { text: string }) => {
-    prompt.set(text);
-  });
-
-  socket.on("czar", (newCzar: string) => {
-    console.log("czar", newCzar);
-    czar.set(newCzar);
-  })
-
-  return socket;
+  
+  socketStore.set(socket);
 }

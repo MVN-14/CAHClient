@@ -1,49 +1,15 @@
-import { writable, type Writable, get } from 'svelte/store';
-import type { Player } from '$lib/types/Player';
+import { type Writable, writable, get } from 'svelte/store';
 
-class UserStore {
-  constructor(
-    public cards: Writable<string[]> = writable([]),
-    public cardPlayed: Writable<string> = writable(""),
-    public username: Writable<string> = writable(""),
-    public roomName: Writable<string> = writable(""),
-  ) { }
-  
-  // methods for non svelte files
-  getCards() {
-    return get(this.cards);
-  }
+import { Game, type Player } from '$lib/types';
+import type { Socket } from 'socket.io-client';
 
-  getUsername = () => {
-    return get(this.username);
+export const gameStore: Writable<Game> = writable(new Game());
+export const socketStore: Writable<Socket> = writable();
+export const getPlayer = (socketId: string): Player => {
+  const player = get(gameStore).players.find(p => p.socketId === socketId);
+  if (!player) {
+    throw new Error("Counld't find player with socket id " + socketId);
   }
-
-  getRoomName = () => {
-    return get(this.roomName);
-  }
-  
+  return player;
 };
-
-class GameStore {
-  constructor(
-    public started: Writable<boolean> = writable(false),
-    public players: Writable<Player[]> = writable([]),
-    public status: Writable<string> = writable(""),
-    public prompt: Writable<string> = writable(""),
-    public czar: Writable<string> = writable(""),
-  ) { }
-  
-  // methods for non svelte files
-  getStatus = () =>  {
-    return get(this.status);
-  }
-
-  getCzar = () => {
-    return get(this.czar);
-  }
-};
-
-export const userStore = new UserStore();
-export const gameStore = new GameStore();
-
 

@@ -1,20 +1,19 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { userStore } from "../../stores";
 
   const dispatch = createEventDispatcher();
-  const { cardPlayed } = userStore;
 
   export let text: string;
   export let color: "black" | "white";
+  export let inHand: boolean = false;
 </script>
 
 <div
-  on:click={(_) => dispatch("click", text)}
+  on:click={() => dispatch("click", text)}
   class="card"
   class:black={color == "black"}
   class:white={color == "white"}
-  class:inHand={color != "black" && $cardPlayed !== text}
+  class:inHand={inHand}
   role="none"
 >
   {text}
@@ -22,9 +21,10 @@
 
 <style>
   .card {
+    font-size: 14px;
     z-index: 5;
-    height: 200px;
-    width: 150px;
+    height: 175px;
+    width: 115px;
     border-radius: 7px;
     padding: 10px;
   }
@@ -37,6 +37,7 @@
   .white {
     background-color: white;
     color: black;
+    border: solid black thin
   }
 
   .inHand:hover {
