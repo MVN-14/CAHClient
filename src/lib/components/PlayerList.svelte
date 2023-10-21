@@ -4,13 +4,19 @@
 
 <main>
   <h1>Players:</h1>
-  {#each $gameStore.players as player}
+  {#each $gameStore.players as player, i}
+    <div class="row" class:highlighted={i % 2 == 0}>
     <p
+      class="name"
       class:czar={player.isCzar}
       class:played={player.playedCards === $gameStore.prompt?.pick}
     >
-      {player.points} - {player.name}
+      {player.name}
     </p>
+    <p>
+      {player.points}
+    </p>
+    </div>
   {/each}
 </main>
 
@@ -20,7 +26,6 @@
     width: 15vw;
     height: 70vh;
     text-align: left;
-    padding: 0 10px 0 10px;
   }
 
   h1 {
@@ -28,10 +33,14 @@
     font-size: 24px;
   }
 
+  .name {
+    border-left: solid transparent 20px;
+  }
+
   p {
-    border-left: solid transparent 15px;
+    margin: 10px 0 10px 0;
     font-size: 24px;
-    padding: 0 0 0 10px;
+    padding: 0 5px 0 5px;
   }
 
   .played {
@@ -40,5 +49,16 @@
 
   .czar {
     border-color: black;
+  }
+
+  .highlighted {
+    background: #3a3a3a;
+  }
+
+  .row {
+    padding: 0 0 0 5px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
   }
 </style>

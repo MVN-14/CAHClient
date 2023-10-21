@@ -44,7 +44,7 @@
       <Board />
     </div>
     {#if $gameStore.started}
-      <button on:click={onDraw}>Draw</button>
+      <button class="draw" on:click={onDraw}>Draw</button>
     {/if}
   {/if}
 </main>
@@ -59,5 +59,25 @@
     justify-content: space-between;
     display: flex;
     gap: 5;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
+  button:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black
+  }
+
+  .draw {
+    margin: 15px 0 0 0;
   }
 </style>

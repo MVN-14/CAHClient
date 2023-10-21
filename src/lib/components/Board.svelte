@@ -73,7 +73,7 @@
 
   .handContainer {
     position: absolute;
-    bottom: 0;
+    bottom: 15px;
     width: 100%;
   }
 </style>
