@@ -1,15 +1,15 @@
 <script lang="ts">
   import { gameStore } from "../../stores";
-
 </script>
 
 <main>
   <h1>Players:</h1>
   {#each $gameStore.players as player}
-    <p class:czar={player.isCzar} 
-       class:played={player.playedCards === $gameStore.prompt?.pick}
+    <p
+      class:czar={player.isCzar}
+      class:played={player.playedCards === $gameStore.prompt?.pick}
     >
-      {player.name}
+      {player.points} - {player.name}
     </p>
   {/each}
 </main>
@@ -33,7 +33,7 @@
     font-size: 24px;
     padding: 0 0 0 10px;
   }
-  
+
   .played {
     border-color: white;
   }

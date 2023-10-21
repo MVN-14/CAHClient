@@ -1,4 +1,4 @@
-import { Socket, io } from "socket.io-client";
+import { io } from "socket.io-client";
 import { PUBLIC_SOCKET_URL } from "$env/static/public";
 import type { Game } from "$lib/types";
 import { gameStore, socketStore } from "../stores";

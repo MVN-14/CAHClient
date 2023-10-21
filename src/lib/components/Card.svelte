@@ -5,6 +5,7 @@
 
   export let text: string;
   export let color: "black" | "white";
+  export let faceDown: boolean = false;
   export let inHand: boolean = false;
 </script>
 
@@ -16,11 +17,13 @@
   class:inHand={inHand}
   role="none"
 >
-  {text}
+  {faceDown ? "Cards Against Humanity" : text}
 </div>
 
 <style>
   .card {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: bold;
     font-size: 14px;
     z-index: 5;
     height: 175px;

@@ -1,11 +1,13 @@
-import type { Player } from "./";
+import type { Card, Player } from "./";
 
 export class Game {
   started: boolean = false;
   status: string = "";
+  statusMessage: string = "";
   players: Player[] = [];
-  prompt?: {text: string, pick: number};
-  playedCards: {card: string}[] = [];
+  prompt?: { text: string, pick: number };
+  playedCards: Card[] = [];
+  choosing: boolean = false;
 
   getPlayer(socketId: string): Player {
     const player = this.players.find(p => p.socketId === socketId);

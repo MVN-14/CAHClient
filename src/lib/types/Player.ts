@@ -5,4 +5,5 @@ export type Player = {
   name: string;
   socketId: string;
   cards: string[];
+  points: number;
 }

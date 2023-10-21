@@ -1,11 +1,9 @@
 <script lang="ts">
   import { Board, PlayerList, UsernameForm } from "$lib/components";
-  import { gameStore, getPlayer, socketStore } from "../../../stores";
+  import { gameStore, socketStore } from "../../../stores";
   import { initializeSocket } from "$lib/socket";
 
   export let data;
-
-  const maxCards = 7;
 
   let roomName: string;
 
@@ -17,13 +15,14 @@
   }
 
   function onDraw() {
-    const player = $gameStore.players.find(p => p.socketId === $socketStore.id);
-    if (!player) { return }
-
-    const numCards = player.cards.length;
-    if (numCards < maxCards) {
-      $socketStore.emit("drawCards", maxCards - numCards);
+    const player = $gameStore.players.find(
+      (p) => p.socketId === $socketStore.id
+    );
+    if (!player) {
+      return;
     }
+
+    $socketStore.emit("drawCards");
   }
 
   function onReady() {
@@ -39,7 +38,7 @@
     {#if !$gameStore.started}
       <button on:click={onReady}>Ready</button>
     {/if}
-    <p>{$gameStore.status}</p>
+    <p>{$gameStore.statusMessage}</p>
     <div id="content">
       <PlayerList />
       <Board />
