@@ -17,7 +17,7 @@
   class:inHand={inHand}
   role="none"
 >
-  {faceDown ? "Cards Against Humanity" : text}
+  {faceDown ? "Clone Against Humanity" : text}
 </div>
 
 <style>
