@@ -1,5 +1,6 @@
 ### Clone Against Humanity (client) - A Cards Against Humanity Clone
 
+![screenshot1](https://github.com/MVN-14/CAHClient/assets/117686444/d6d5f600-7a6a-4784-adaa-469bf0ba3714)
 
 Play live version at [cah.mnogueira.ca](https://cah.mnogueira.ca) (hosted on [Vercel](https://vercel.com/))
 
