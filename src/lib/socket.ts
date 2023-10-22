@@ -3,9 +3,6 @@ import { PUBLIC_SOCKET_URL } from "$env/static/public";
 import type { Game } from "$lib/types";
 import { gameStore, socketStore } from "../stores";
 
-//const { getUsername, getRoomName, cardPlayed, cards } = userStore;
-//const { players, status, started, prompt, czar } = gameStore;
-
 export function initializeSocket(username: string, roomName: string) {
   const socket = io(PUBLIC_SOCKET_URL);
   socket.on("connect", () => {
